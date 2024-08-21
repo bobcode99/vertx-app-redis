@@ -30,5 +30,13 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+            <version>4.5.9</version>
+        </dependency>
+
+
+
     </dependencies>
 </project>
