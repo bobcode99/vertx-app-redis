@@ -24,7 +24,13 @@ public class RedisClient {
     public Future<String> get(String key) {
         Promise<String> promise = Promise.promise();
         redisAPI.get(key)
-                .onSuccess(response -> promise.complete(response.toString()))
+                .onSuccess(response -> {
+                    if (response == null) {
+                        promise.fail("Key not found");
+                    } else {
+                        promise.complete(response.toString());
+                    }
+                })
                 .onFailure(promise::fail);
         return promise.future();
     }
