@@ -71,7 +71,7 @@ public class RedisHttpVerticle extends AbstractVerticle {
         // Start the HTTP server
         vertx.createHttpServer()
                 .requestHandler(router)
-                .listen(8888)
+                .listen(8889)
                 .onSuccess(server -> {
                     System.out.println("HTTP server started on port 8888");
                     startPromise.complete();
