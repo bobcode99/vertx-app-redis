@@ -91,11 +91,11 @@ return new RocksDBDataStore(rocksDB);
 }
 }
 }
+```
 
 Step 5: Integrate in the Main Application
 
-java
-
+```java
 package org.example;
 
 public class TestMain {
@@ -125,6 +125,7 @@ public class TestMain {
     }
 }
 ```
+
 Key Points:
 
     Strategy Pattern: This pattern is used to switch between Redis and RocksDB based on configuration. Each database has its own implementation of the DataStore interface.
