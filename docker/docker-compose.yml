@@ -1,0 +1,23 @@
+services:
+  redis-cluster:
+    image: bitnami/redis-cluster:6.2.14-debian-12-r24
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_CLUSTER_REPLICAS=0
+      - REDIS_NODES=127.0.0.1 127.0.0.1 127.0.0.1
+      - REDIS_CLUSTER_CREATOR=yes
+      - REDIS_CLUSTER_DYNAMIC_IPS=no
+      - REDIS_CLUSTER_ANNOUNCE_IP=127.0.0.1
+      - REDIS_PORT_NUMBER=6380
+    ports:
+      - "6380:6380"
+    networks:
+      - redis-net
+    volumes:
+      - redis-data:/bitnami
+
+networks:
+  redis-net:
+
+volumes:
+  redis-data:

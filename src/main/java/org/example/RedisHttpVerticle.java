@@ -15,7 +15,7 @@ import io.vertx.redis.client.RedisOptions;
 
 public class RedisHttpVerticle extends AbstractVerticle {
 
-    private RedisClient redisClient;
+    private RedisClientVertx redisClientVertx;
     private final Logger logger = LoggerFactory.getLogger(RedisHttpVerticle.class);
 
     @Override
@@ -24,7 +24,7 @@ public class RedisHttpVerticle extends AbstractVerticle {
         RedisOptions options = new RedisOptions().setConnectionString("redis://localhost:6379");
         Redis redis = Redis.createClient(vertx, options);
         RedisAPI redisAPI = RedisAPI.api(redis);
-        redisClient = new RedisClient(redisAPI);
+        redisClientVertx = new RedisClientVertx(redisAPI);
         // Set up the router
         Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create()); // Handle the body for POST requests
@@ -38,7 +38,7 @@ public class RedisHttpVerticle extends AbstractVerticle {
             if (key == null || value == null) {
                 ctx.response().setStatusCode(400).end("Key and value must be provided");
             } else {
-                redisClient.set(key, value)
+                redisClientVertx.set(key, value)
                         .onSuccess(res -> ctx.response().end("Key set successfully"))
                         .onFailure(err -> ctx.response().setStatusCode(500).end("Failed to set key: " + err.getMessage()));
             }
@@ -51,7 +51,7 @@ public class RedisHttpVerticle extends AbstractVerticle {
             if (key == null) {
                 ctx.response().setStatusCode(400).end("Key must be provided");
             } else {
-                redisClient.get(key)
+                redisClientVertx.get(key)
                         .onSuccess(value -> ctx.response().end(value))
                         .onFailure(err -> {
                             if ("Key not found".equals(err.getMessage())) {

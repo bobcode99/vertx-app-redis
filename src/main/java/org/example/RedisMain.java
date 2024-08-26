@@ -13,7 +13,7 @@ import io.vertx.redis.client.RedisOptions;
 public class RedisMain extends AbstractVerticle {
 
     private final Logger logger = LoggerFactory.getLogger(Main.class);
-    private RedisClient redisClient;
+    private RedisClientVertx redisClientVertx;
 
     @Override
     public void start() {
@@ -22,7 +22,7 @@ public class RedisMain extends AbstractVerticle {
         RedisOptions options = new RedisOptions().setConnectionString("redis://localhost:6379");
         Redis redis = Redis.createClient(vertx, options);
         RedisAPI redisAPI = RedisAPI.api(redis);
-        redisClient = new RedisClient(redisAPI);
+        redisClientVertx = new RedisClientVertx(redisAPI);
 
         // Execute the ordered steps
         logger.info("Start");
@@ -36,7 +36,7 @@ public class RedisMain extends AbstractVerticle {
                     } else {
                         logger.info("Key1 data: " + key1Data);
                         // Step 4: Write data to redis with key "key3" and data "data3"
-                        return redisClient.set("key3", "data3");
+                        return redisClientVertx.set("key3", "data3");
                     }
                 })
                 .compose(v -> {
@@ -59,7 +59,7 @@ public class RedisMain extends AbstractVerticle {
     // Custom method to get data by key in the Main class
     private Future<String> getByKeyInMainClass(String key) {
         Promise<String> promise = Promise.promise();
-        redisClient.get(key)
+        redisClientVertx.get(key)
                 .onSuccess(promise::complete)
                 .onFailure(promise::fail);
         return promise.future();
